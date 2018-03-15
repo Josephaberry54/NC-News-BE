@@ -28,6 +28,9 @@ function seedArticles(topicData, userData) {
     return promiseParse(file, { columns: true })
       .then(articles =>
         articles.map(article => {
+          article.belongs_to = topicData.find(
+            element => element.slug === article.belongs_to
+          )._id;
           article.created_by =
             userData[Math.floor(Math.random() * userData.length)];
           return article;

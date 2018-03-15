@@ -11,7 +11,8 @@ const ArticleSchema = new Schema({
     required: true
   },
   belongs_to: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "topic",
     required: true
   },
   votes: {
