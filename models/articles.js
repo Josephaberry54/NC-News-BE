@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ArticleSchema = new Schema({
@@ -8,10 +8,11 @@ const ArticleSchema = new Schema({
   },
   body: {
     type: String,
-    requied: true
+    required: true
   },
   belongs_to: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    references: user,
     required: true
   },
   votes: {
@@ -19,10 +20,17 @@ const ArticleSchema = new Schema({
     required: true,
     default: 0
   },
-  created_by: {
-    type: String,
-    lowercase: true
-  }
+  written_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    references: user,
+    required: true
+  },
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "comments"
+    }
+  ]
 });
 
-module.exports = mongoose.model('articles', ArticleSchema);
+module.exports = mongoose.model("articles", ArticleSchema);
