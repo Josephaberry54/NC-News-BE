@@ -1,6 +1,5 @@
 process.env.NODE_ENV = "test";
 const app = require("../server");
-// const { } = require("../seeds/data");
 const { expect } = require("chai");
 const request = require("supertest")(app);
 

@@ -16,10 +16,6 @@ mongoose
 
 app.use(bodyParser.json());
 
-// app.all("*", (req, res) => {
-//   res.json({ ok: true });
-// });
-
 app.use("/api", apiRouter);
 
 module.exports = app;

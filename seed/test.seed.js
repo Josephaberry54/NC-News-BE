@@ -61,7 +61,10 @@ function saveTestData() {
     .then(comments => {
       savedData.comments = comments;
       return savedData;
-    });
+    })
+    .then(() => console.log("seeded test"));
 }
+
+saveTestData();
 
 module.exports = saveTestData;
