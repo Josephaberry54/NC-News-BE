@@ -11,19 +11,17 @@ const ArticleSchema = new Schema({
     required: true
   },
   belongs_to: {
-    type: mongoose.Schema.Types.ObjectId,
-    references: user,
+    type: String,
     required: true
   },
   votes: {
     type: Number,
-    required: true,
     default: 0
   },
-  written_by: {
-    type: mongoose.Schema.Types.ObjectId,
-    references: user,
-    required: true
+  created_by: {
+    type: Object,
+    required: true,
+    default: { name: "northcoder" }
   },
   comments: [
     {

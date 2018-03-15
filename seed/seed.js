@@ -23,12 +23,18 @@ function seedTopics() {
   );
 }
 
-function seedArticles() {
-  return promiseFs(`${__dirname}/data/topics.csv`, "utf8").then(file =>
-    promiseParse(file, { columns: true })
-      .then(articles => articles.map(article => {}))
-      .then(articles => Article.insertMany(articles))
-  );
+function seedArticles(topicData, userData) {
+  return promiseFs(`${__dirname}/data/articles.csv`, "utf8").then(file => {
+    return promiseParse(file, { columns: true })
+      .then(articles =>
+        articles.map(article => {
+          article.created_by =
+            userData[Math.floor(Math.random() * userData.length)];
+          return article;
+        })
+      )
+      .then(articles => Article.insertMany(articles));
+  });
 }
 
 // This should seed your development database using the CSV file data
@@ -46,18 +52,17 @@ function seedDatabase(DB_URL) {
       return seedTopics();
     })
     .then(topics => {
-      console.log(topics);
       console.log("saved topics!");
-      return seedUsers();
+      return Promise.all([topics, seedUsers()]);
     })
-    .then(users => {
+    .then(([topics, users]) => {
       console.log("saved users!");
-      //return seedArticles();
+      return seedArticles(topics, users);
+    })
+    .then(articles => {
+      console.log("saved articles!");
+      // mongoose.disconnect();
     });
-  // .then(articles => {
-  //   console.log("saved articles!");
-  //   // mongoose.disconnect();
-  // });
 }
 
 seedDatabase(DB.dev);
