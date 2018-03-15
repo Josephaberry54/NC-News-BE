@@ -23,13 +23,7 @@ const ArticleSchema = new Schema({
     type: Object,
     required: true,
     default: { name: "northcoder" }
-  },
-  comments: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "comments"
-    }
-  ]
+  }
 });
 
 module.exports = mongoose.model("articles", ArticleSchema);
