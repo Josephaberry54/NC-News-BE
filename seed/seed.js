@@ -95,4 +95,4 @@ function seedDatabase(DB_URL) {
     });
 }
 
-seedDatabase(DB.dev);
+seedDatabase(DB[process.env.NODE_ENV]);
