@@ -26,8 +26,23 @@ function postACommentByArticleId(req, res, next) {
     .then(commentDoc => res.status(201).json({ commentDoc }));
 }
 
+function voteOnAnArticle(req, res, next) {
+  const { vote } = req.query;
+  const { article_id } = req.params;
+  let value;
+  if (vote === "up") value = 1;
+  if (vote === "down") value = -1;
+
+  return Article.findOneAndUpdate(
+    { _id: article_id },
+    { $inc: { votes: value } },
+    { new: true }
+  ).then(article => res.send({ article }));
+}
+
 module.exports = {
   getAllArticles,
   getCommentsByArticleId,
-  postACommentByArticleId
+  postACommentByArticleId,
+  voteOnAnArticle
 };

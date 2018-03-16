@@ -72,6 +72,24 @@ describe("/api", () => {
             expect(res.body.commentDoc.belongs_to).to.equal(`${article_id}`);
           });
       });
+      it("PUT returns status 200 and increments the votes on an article if query vote=up", () => {
+        const article_id = usefulData.articles[0]._id;
+        return request
+          .put(`/api/articles/${article_id}?vote=up`)
+          .expect(200)
+          .then(res => {
+            expect(res.body.article.votes).to.equal(1);
+          });
+      });
+      it("PUT returns status 200 and increments the votes on an article if query vote=down", () => {
+        const article_id = usefulData.articles[0]._id;
+        return request
+          .put(`/api/articles/${article_id}?vote=down`)
+          .expect(200)
+          .then(res => {
+            expect(res.body.article.votes).to.equal(-1);
+          });
+      });
     });
   });
 });
