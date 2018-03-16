@@ -12,7 +12,7 @@ const ArticleSchema = new Schema({
   },
   belongs_to: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "topic",
+    ref: "topics",
     required: true
   },
   votes: {
@@ -20,9 +20,9 @@ const ArticleSchema = new Schema({
     default: 0
   },
   created_by: {
-    type: Object,
-    required: true,
-    default: { name: "northcoder" }
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "users",
+    required: true
   }
 });
 
