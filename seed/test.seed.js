@@ -1,4 +1,7 @@
 const { User, Comment, Topic, Article } = require("../models/models");
+const { DB, PORT } = require("../config");
+const mongoose = require("mongoose");
+mongoose.Promise = Promise;
 
 const savedData = {};
 
@@ -20,51 +23,73 @@ function saveTopics() {
   return Promise.all(topics);
 }
 
-function saveArticles() {
+function saveArticles(user, topics) {
   const articles = [
-    { title: "Cats are great", body: "something", belongs_to: "cats" },
-    { title: "Football is fun", body: "something", belongs_to: "football" }
+    {
+      title: "Cats are great",
+      body: "something",
+      belongs_to: topics[2]._id,
+      created_by: user._id
+    },
+    {
+      title: "Football is fun",
+      body: "something",
+      belongs_to: topics[0]._id,
+      created_by: user._id
+    }
   ].map(a => new Article(a).save());
   return Promise.all(articles);
 }
 
-function saveComments(articles) {
+function saveComments(user, topics, articles) {
   const comments = [
     {
       body: "this is a comment",
       belongs_to: articles[0]._id,
-      created_by: "northcoder"
+      created_by: user._id
     },
     {
       body: "this is another comment",
-      belongs_to: articles[0]._id,
-      created_by: "northcoder"
+      belongs_to: articles[1]._id,
+      created_by: user._id
     }
   ].map(c => new Comment(c).save());
   return Promise.all(comments);
 }
 
-function saveTestData() {
-  return saveUser()
+function saveTestData(DB_URL) {
+  mongoose
+    .connect(DB_URL, { useMongoClient: true })
+    .then(() => {
+      console.log("connected to test database");
+      return mongoose.connection.db.dropDatabase();
+    })
+    .then(() => {
+      console.log("dropped test database");
+      return saveUser();
+    })
     .then(user => {
       savedData.user = user;
-      return saveTopics();
+      return Promise.all([user, saveTopics()]);
     })
-    .then(topics => {
+    .then(([user, topics]) => {
       savedData.topics = topics;
-      return saveArticles();
+      return Promise.all([user, topics, saveArticles(user, topics)]);
     })
-    .then(articles => {
+    .then(([user, topics, articles]) => {
       savedData.articles = articles;
-      return saveComments(articles);
+      return saveComments(user, topics, articles);
     })
     .then(comments => {
       savedData.comments = comments;
       return savedData;
     })
-    .then(() => console.log("seeded test"));
+    .then(() => {
+      console.log("seeded test database!");
+      return mongoose.disconnect();
+    });
 }
 
-saveTestData();
+saveTestData(DB.test);
 
 module.exports = saveTestData;

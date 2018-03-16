@@ -2,13 +2,15 @@ var { User, Topic, Article, Comment, Model } = require("../models/models");
 const { DB, PORT } = require("../config");
 var mongoose = require("mongoose");
 mongoose.Promise = Promise;
-const util = require("util");
+const { promisify } = require("util");
 const fs = require("fs");
 const parse = require("csv-parse");
 const faker = require("faker/locale/it");
 
-const promiseFs = util.promisify(fs.readFile);
-const promiseParse = util.promisify(parse);
+const promiseFs = promisify(fs.readFile);
+const promiseParse = promisify(parse);
+
+// users and topics can be the same function with the path and the model passed in
 
 function seedUsers() {
   return promiseFs(`${__dirname}/data/users.csv`, "utf8").then(file =>
@@ -58,6 +60,12 @@ function seedComments(topicDate, userData, articleData) {
 // This should seed your development database using the CSV file data
 // Feel free to use the async library, or native Promises, to handle the asynchronicity of the seeding operations.
 
+// when connecting below apparantly needs {useMongoClient: true} as a second parameter
+
+// for neatness sam only puts variable names in to his promise alls so therefore saves any functions etc to a variable before passing in to the promise all
+// rather than mutating the article write const newArticle = {...article, created_by: <randomuserid>}
+//could use lodash sample to generate a random user etc
+
 function seedDatabase(DB_URL) {
   mongoose
     .connect(DB_URL)
@@ -83,7 +91,7 @@ function seedDatabase(DB_URL) {
     })
     .then(comments => {
       console.log("seeded comments!");
-      // mongoose.disconnect();
+      return mongoose.disconnect();
     });
 }
 
