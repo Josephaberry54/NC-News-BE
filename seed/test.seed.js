@@ -58,7 +58,7 @@ function saveComments(user, topics, articles) {
 }
 
 function saveTestData(DB_URL) {
-  mongoose
+  return mongoose
     .connect(DB_URL, { useMongoClient: true })
     .then(() => {
       console.log("connected to test database");
@@ -83,13 +83,7 @@ function saveTestData(DB_URL) {
     .then(comments => {
       savedData.comments = comments;
       return savedData;
-    })
-    .then(() => {
-      console.log("seeded test database!");
-      return mongoose.disconnect();
     });
 }
-
-saveTestData(DB.test);
 
 module.exports = saveTestData;

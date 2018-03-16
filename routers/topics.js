@@ -3,6 +3,6 @@ const { getAllTopics, getArticlesByTopic } = require("../controllers/topics");
 
 topicsRouter.route("/").get(getAllTopics);
 
-topicsRouter.route("/:topic/articles").get(getArticlesByTopic);
+topicsRouter.route("/:topic_id/articles").get(getArticlesByTopic);
 
 module.exports = topicsRouter;

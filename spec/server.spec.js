@@ -3,8 +3,16 @@ const app = require("../server");
 const { expect } = require("chai");
 const request = require("supertest")(app);
 const mongoose = require("mongoose");
+const saveTestData = require("../seed/test.seed");
+const { DB } = require("../config");
 
 describe("/api", () => {
+  let usefulData;
+  beforeEach(() => {
+    return saveTestData(DB[process.env.NODE_ENV]).then(data => {
+      usefulData = data;
+    });
+  });
   after(() => {
     return mongoose.disconnect();
   });
@@ -15,20 +23,32 @@ describe("/api", () => {
         .expect(200)
         .then(res => {
           expect(res.body.topics[0]).to.be.an("object");
-          expect(res.body.topics[0].title)
-            .to.be.a("string")
-            .to.equal("Football");
+          expect(res.body.topics[0].title).to.be.a("string");
         });
     });
-    describe("/:topic/articles", () => {
+    describe("/:topic_id/articles", () => {
       it("GET returns status 200 and an object of all the articles for a certain topic", () => {
+        const topic_id = usefulData.topics[0]._id;
+        console.log(topic_id);
         return request
-          .get("/api/topics/football/articles")
+          .get(`/api/topics/${topic_id}/articles`)
           .expect(200)
           .then(res => {
-            expect(res.body).to.equal("");
+            expect(res.body.articles[0].belongs_to).to.equal(`${topic_id}`);
           });
       });
+    });
+  });
+  describe("/articles", () => {
+    it("GET returns status 200 and an object of all topics", () => {
+      return request
+        .get("/api/articles")
+        .expect(200)
+        .then(res => {
+          expect(res.body.articles[0]).to.be.an("object");
+          expect(res.body.articles[0].title).to.be.a("string");
+          expect(res.body.articles.length).to.equal(2);
+        });
     });
   });
 });
