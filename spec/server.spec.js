@@ -50,5 +50,18 @@ describe("/api", () => {
           expect(res.body.articles.length).to.equal(2);
         });
     });
+    describe("/:article_id/comments", () => {
+      it("GET returns status 200 and an object of all the comments fo an article", () => {
+        console.log(usefulData.comments);
+        const article_id = usefulData.articles[0]._id;
+        return request
+          .get(`/api/articles/${article_id}/comments`)
+          .expect(200)
+          .then(res => {
+            expect(res.body.comments[0].belongs_to).to.equal(`${article_id}`);
+            expect(res.body.comments.length).to.equal(1);
+          });
+      });
+    });
   });
 });
