@@ -61,11 +61,11 @@ function saveTestData(DB_URL) {
   return mongoose
     .connect(DB_URL, { useMongoClient: true })
     .then(() => {
-      console.log("connected to test database");
+      // console.log("connected to test database");
       return mongoose.connection.db.dropDatabase();
     })
     .then(() => {
-      console.log("dropped test database");
+      //console.log("dropped test database");
       return saveUser();
     })
     .then(user => {

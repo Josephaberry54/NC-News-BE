@@ -29,7 +29,6 @@ describe("/api", () => {
     describe("/:topic_id/articles", () => {
       it("GET returns status 200 and an object of all the articles for a certain topic", () => {
         const topic_id = usefulData.topics[0]._id;
-        console.log(topic_id);
         return request
           .get(`/api/topics/${topic_id}/articles`)
           .expect(200)
@@ -52,7 +51,6 @@ describe("/api", () => {
     });
     describe("/:article_id/comments", () => {
       it("GET returns status 200 and an object of all the comments fo an article", () => {
-        console.log(usefulData.comments);
         const article_id = usefulData.articles[0]._id;
         return request
           .get(`/api/articles/${article_id}/comments`)
@@ -60,6 +58,18 @@ describe("/api", () => {
           .then(res => {
             expect(res.body.comments[0].belongs_to).to.equal(`${article_id}`);
             expect(res.body.comments.length).to.equal(1);
+          });
+      });
+      it("POST returns status 201 and the comment object posted", () => {
+        const article_id = usefulData.articles[0]._id;
+        return request
+          .post(`/api/articles/${article_id}/comments`)
+          .set("content-type", "application/json")
+          .send({ comment: "post request comment" })
+          .expect(201)
+          .then(res => {
+            expect(res.body.commentDoc).to.be.an("Object");
+            expect(res.body.commentDoc.belongs_to).to.equal(`${article_id}`);
           });
       });
     });
