@@ -1,5 +1,8 @@
 var { User, Topic, Article, Comment, Model } = require("../models/models");
-const { DB, PORT } = require("../config");
+var DB =
+  process.env.NODE_ENV === "production"
+    ? process.env.DB_URL
+    : require("../config").DB[process.env.NODE_ENV];
 var mongoose = require("mongoose");
 mongoose.Promise = Promise;
 const { promisify } = require("util");
