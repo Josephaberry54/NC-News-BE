@@ -4,4 +4,6 @@ function getAllTopics(req, res, next) {
   return Topic.find().then(topics => res.json({ topics }));
 }
 
-module.exports = { getAllTopics };
+function getArticlesByTopic(req, res, next) {}
+
+module.exports = { getAllTopics, getArticlesByTopic };

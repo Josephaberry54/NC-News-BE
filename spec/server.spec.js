@@ -20,8 +20,15 @@ describe("/api", () => {
             .to.equal("Football");
         });
     });
-    describe("/", () => {
-      it("", () => {});
+    describe("/:topic/articles", () => {
+      it("GET returns status 200 and an object of all the articles for a certain topic", () => {
+        return request
+          .get("/api/topics/football/articles")
+          .expect(200)
+          .then(res => {
+            expect(res.body).to.equal("");
+          });
+      });
     });
   });
 });
