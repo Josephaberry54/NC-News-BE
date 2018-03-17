@@ -1,10 +1,12 @@
 process.env.NODE_ENV = "test";
-const app = require("../server");
-const { expect } = require("chai");
-const request = require("supertest")(app);
-const mongoose = require("mongoose");
-const saveTestData = require("../seed/test.seed");
 const { DB } = require("../config");
+
+const app = require("../server");
+const request = require("supertest")(app);
+const { expect } = require("chai");
+const mongoose = require("mongoose");
+mongoose.Promise = Promise;
+const saveTestData = require("../seed/test.seed");
 
 describe("/api", () => {
   let usefulData;

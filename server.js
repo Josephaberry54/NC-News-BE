@@ -1,15 +1,13 @@
 if (!process.env.NODE_ENV) process.env.NODE_ENV = "dev";
-
-var express = require("express");
-var mongoose = require("mongoose");
-var bodyParser = require("body-parser");
-var app = express();
-var DB =
+const DB =
   process.env.NODE_ENV === "production"
     ? process.env.DB_URL
     : require("./config").DB[process.env.NODE_ENV];
 
+const app = require("express")();
+const mongoose = require("mongoose");
 mongoose.Promise = Promise;
+const bodyParser = require("body-parser");
 const apiRouter = require("./routers/api");
 
 mongoose

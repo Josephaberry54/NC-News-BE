@@ -1,9 +1,10 @@
-var { User, Topic, Article, Comment, Model } = require("../models/models");
-var DB =
+const { User, Topic, Article, Comment, Model } = require("../models/models");
+const DB =
   process.env.NODE_ENV === "production"
     ? process.env.DB_URL
     : require("../config").DB[process.env.NODE_ENV];
-var mongoose = require("mongoose");
+
+const mongoose = require("mongoose");
 mongoose.Promise = Promise;
 const { promisify } = require("util");
 const fs = require("fs");
@@ -60,12 +61,6 @@ function seedComments(topicDate, userData, articleData) {
   return Comment.insertMany(comments);
 }
 
-// This should seed your development database using the CSV file data
-// Feel free to use the async library, or native Promises, to handle the asynchronicity of the seeding operations.
-
-// when connecting below apparantly needs {useMongoClient: true} as a second parameter
-
-// for neatness sam only puts variable names in to his promise alls so therefore saves any functions etc to a variable before passing in to the promise all
 // rather than mutating the article write const newArticle = {...article, created_by: <randomuserid>}
 //could use lodash sample to generate a random user etc
 

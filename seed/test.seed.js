@@ -1,5 +1,4 @@
 const { User, Comment, Topic, Article } = require("../models/models");
-const { DB, PORT } = require("../config");
 const mongoose = require("mongoose");
 mongoose.Promise = Promise;
 
