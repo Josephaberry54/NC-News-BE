@@ -12,10 +12,17 @@ function voteOnAComment(req, res, next) {
     { $inc: { votes: value } },
     { new: true }
   ).then(comment =>
-    res.send({
+    res.json({
       comment
     })
   );
 }
 
-module.exports = { voteOnAComment };
+function deleteCommentById(req, res, next) {
+  const { comment_id } = req.params;
+  return Comment.findOneAndRemove({ _id: comment_id }, { new: false }).then(
+    deletedComment => res.json({ deletedComment })
+  );
+}
+
+module.exports = { voteOnAComment, deleteCommentById };

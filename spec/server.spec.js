@@ -115,6 +115,21 @@ describe("/api", () => {
           expect(res.body.comment.votes).to.equal(-1);
         });
     });
+    it("DELETE returns status 200 and returns the comment that was deleted", () => {
+      const comment_id = usefulData.comments[1]._id;
+      return request
+        .delete(`/api/comments/${comment_id}`)
+        .expect(200)
+        .then(res => {
+          const { _id, body } = res.body.deletedComment;
+          expect(body)
+            .to.be.a("string")
+            .to.equal("this is another comment");
+          expect(_id)
+            .to.be.a("string")
+            .to.equal(`${comment_id}`);
+        });
+    });
   });
   describe("/users/:user_id", () => {
     it("GET returns status 200 and an object of a specified users profile", () => {
