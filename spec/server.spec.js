@@ -74,6 +74,8 @@ describe("/api", () => {
             expect(res.body.commentDoc.belongs_to).to.equal(`${article_id}`);
           });
       });
+    });
+    describe("/:article_id/?vote", () => {
       it("PUT returns status 200 and increments the votes on an article if query vote=up", () => {
         const article_id = usefulData.articles[0]._id;
         return request
@@ -92,6 +94,26 @@ describe("/api", () => {
             expect(res.body.article.votes).to.equal(-1);
           });
       });
+    });
+  });
+  describe("/comments/:comment_id", () => {
+    it("PUT returns status 200 and increments the votes on an comment if query vote=up", () => {
+      const comment_id = usefulData.comments[0]._id;
+      return request
+        .put(`/api/comments/${comment_id}?vote=up`)
+        .expect(200)
+        .then(res => {
+          expect(res.body.comment.votes).to.equal(1);
+        });
+    });
+    it("PUT returns status 200 and increments the votes on an comment if query vote=down", () => {
+      const comment_id = usefulData.comments[0]._id;
+      return request
+        .put(`/api/comments/${comment_id}?vote=down`)
+        .expect(200)
+        .then(res => {
+          expect(res.body.comment.votes).to.equal(-1);
+        });
     });
   });
 });
