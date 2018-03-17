@@ -19,7 +19,7 @@ describe("/api", () => {
     return mongoose.disconnect();
   });
   describe("/topics", () => {
-    it("GET returns status 200 and an object of all topics", () => {
+    it("GET returns status 200 and an object containing an array of all the topics", () => {
       return request
         .get("/api/topics")
         .expect(200)
@@ -29,7 +29,7 @@ describe("/api", () => {
         });
     });
     describe("/:topic_id/articles", () => {
-      it("GET returns status 200 and an object of all the articles for a certain topic", () => {
+      it("GET returns status 200 and an object containing an array of all the articles for a certain topic", () => {
         const topic_id = usefulData.topics[0]._id;
         return request
           .get(`/api/topics/${topic_id}/articles`)
@@ -41,7 +41,7 @@ describe("/api", () => {
     });
   });
   describe("/articles", () => {
-    it("GET returns status 200 and an object of all topics", () => {
+    it("GET returns status 200 and an object containing an array of all the articles", () => {
       return request
         .get("/api/articles")
         .expect(200)
@@ -52,7 +52,7 @@ describe("/api", () => {
         });
     });
     describe("/:article_id/comments", () => {
-      it("GET returns status 200 and an object of all the comments fo an article", () => {
+      it("GET returns status 200 and an object of all the comments for the specified article", () => {
         const article_id = usefulData.articles[0]._id;
         return request
           .get(`/api/articles/${article_id}/comments`)
@@ -62,7 +62,7 @@ describe("/api", () => {
             expect(res.body.comments.length).to.equal(1);
           });
       });
-      it("POST returns status 201 and the comment object posted", () => {
+      it("POST returns status 201 and the comment object that was posted", () => {
         const article_id = usefulData.articles[0]._id;
         return request
           .post(`/api/articles/${article_id}/comments`)
@@ -85,7 +85,7 @@ describe("/api", () => {
             expect(res.body.article.votes).to.equal(1);
           });
       });
-      it("PUT returns status 200 and increments the votes on an article if query vote=down", () => {
+      it("PUT returns status 200 and decrements the votes on an article if query vote=down", () => {
         const article_id = usefulData.articles[0]._id;
         return request
           .put(`/api/articles/${article_id}?vote=down`)
@@ -97,7 +97,7 @@ describe("/api", () => {
     });
   });
   describe("/comments/:comment_id", () => {
-    it("PUT returns status 200 and increments the votes on an comment if query vote=up", () => {
+    it("PUT returns status 200 and increments the votes on a comment if query vote=up", () => {
       const comment_id = usefulData.comments[0]._id;
       return request
         .put(`/api/comments/${comment_id}?vote=up`)
@@ -106,13 +106,31 @@ describe("/api", () => {
           expect(res.body.comment.votes).to.equal(1);
         });
     });
-    it("PUT returns status 200 and increments the votes on an comment if query vote=down", () => {
+    it("PUT returns status 200 and decrements the votes on a comment if query vote=down", () => {
       const comment_id = usefulData.comments[0]._id;
       return request
         .put(`/api/comments/${comment_id}?vote=down`)
         .expect(200)
         .then(res => {
           expect(res.body.comment.votes).to.equal(-1);
+        });
+    });
+  });
+  describe("/users/:user_id", () => {
+    it("GET returns status 200 and an object of a specified users profile", () => {
+      const user_id = usefulData.user._id;
+      return request
+        .get(`/api/users/${user_id}`)
+        .expect(200)
+        .then(res => {
+          const { user } = res.body;
+          expect(user).to.be.an("object");
+          expect(user.username)
+            .to.be.a("string")
+            .to.equal("northcoder");
+          expect(user._id)
+            .to.be.a("string")
+            .to.equal(`${user_id}`);
         });
     });
   });

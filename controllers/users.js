@@ -1,3 +1,8 @@
 const { User } = require("../models/models");
 
-module.exports = {};
+function getUserByUserId(req, res, next) {
+  const { user_id } = req.params;
+  User.findOne({ _id: user_id }).then(user => res.json({ user }));
+}
+
+module.exports = { getUserByUserId };
