@@ -258,7 +258,7 @@ describe("/api", () => {
     it("Returns page not found when an invalid route is requested", () => {
       return request
         .get("/*")
-        .expect(400)
+        .expect(404)
         .then(res => {
           expect(res.body.message)
             .to.be.a("string")
