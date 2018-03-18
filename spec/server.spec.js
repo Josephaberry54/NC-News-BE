@@ -224,6 +224,16 @@ describe("/api", () => {
             .to.equal(`${comment_id}`);
         });
     });
+    it("DELETE returns an error message when the comment has already been deleted", () => {
+      return request
+        .delete("/api/comments/5aae4f1916d75d2da5472c68")
+        .expect(400)
+        .then(res => {
+          expect(res.body.message)
+            .to.be.a("string")
+            .to.equal("no such comment");
+        });
+    });
   });
 
   describe("/users/:user_id", () => {
@@ -241,6 +251,18 @@ describe("/api", () => {
           expect(user._id)
             .to.be.a("string")
             .to.equal(`${user_id}`);
+        });
+    });
+  });
+  describe("/*", () => {
+    it("Returns page not found when an invalid route is requested", () => {
+      return request
+        .get("/*")
+        .expect(400)
+        .then(res => {
+          expect(res.body.message)
+            .to.be.a("string")
+            .to.equal("page not found");
         });
     });
   });

@@ -2,7 +2,9 @@ const { Topic, Article, Comment } = require("../models/models");
 const Promise = require("bluebird");
 
 function getAllTopics(req, res, next) {
-  return Topic.find().then(topics => res.json({ topics }));
+  return Topic.find()
+    .then(topics => res.json({ topics }))
+    .catch(next);
 }
 
 function getArticlesByTopic(req, res, next) {
@@ -18,7 +20,8 @@ function getArticlesByTopic(req, res, next) {
         );
       });
     })
-    .then(articles => res.json({ articles }));
+    .then(articles => res.json({ articles }))
+    .catch(next);
 }
 
 module.exports = { getAllTopics, getArticlesByTopic };

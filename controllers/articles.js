@@ -15,14 +15,15 @@ function getAllArticles(req, res, next) {
     })
     .then(articles => {
       res.json({ articles });
-    });
+    })
+    .catch(next);
 }
 
 function getCommentsByArticleId(req, res, next) {
   const { article_id } = req.params;
-  Comment.find({ belongs_to: article_id }).then(comments =>
-    res.json({ comments })
-  );
+  Comment.find({ belongs_to: article_id })
+    .then(comments => res.json({ comments }))
+    .catch(next);
 }
 
 function postACommentByArticleId(req, res, next) {
@@ -37,21 +38,23 @@ function postACommentByArticleId(req, res, next) {
       });
       return newComment.save();
     })
-    .then(commentDoc => res.status(201).json({ commentDoc }));
+    .then(commentDoc => res.status(201).json({ commentDoc }))
+    .catch(next);
 }
 
 function voteOnAnArticle(req, res, next) {
   const { vote } = req.query;
   const { article_id } = req.params;
   let value;
-  if (vote === "up") value = 1;
-  if (vote === "down") value = -1;
+  vote === "up" ? (value = 1) : vote === "down" ? (value = -1) : value;
 
   return Article.findOneAndUpdate(
     { _id: article_id },
     { $inc: { votes: value } },
     { new: true }
-  ).then(article => res.send({ article }));
+  )
+    .then(article => res.send({ article }))
+    .catch(next);
 }
 
 module.exports = {

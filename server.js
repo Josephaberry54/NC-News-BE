@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
 mongoose.Promise = Promise;
 const bodyParser = require("body-parser");
 const apiRouter = require("./routers/api");
+const morgan = require("morgan");
 
 mongoose
   .connect(DB, { useMongoClient: true })
@@ -16,11 +17,29 @@ mongoose
   .catch(err => console.log("connection failed", err));
 
 app.use(bodyParser.json());
+app.use(morgan("dev"));
 
 app.use("/api", apiRouter);
 
-app.use("/*", res => {
-  res.status(400).json({ message: "Page not found" });
+app.use("/*", (req, res, next) =>
+  res.status(400).json({ message: "page not found" })
+);
+
+app.use((err, req, res, next) => {
+  //console.log(err);
+  if (err.name === "CastError" || err.name === "ValidationError")
+    return res.status(400).json({
+      message: "invalid input"
+    });
+  next(err);
+});
+
+app.use((err, req, res, next) => {
+  if (err.message === "no such comment")
+    return res.status(400).json({
+      message: err.message
+    });
+  next(err);
 });
 
 app.use((err, req, res, next) => {
@@ -31,8 +50,8 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-app.use((err, req, res, next) =>
-  res.status(500).json({ message: "Internal server error" })
-);
+app.use((err, req, res, next) => {
+  res.status(500).json({ message: "internal server error" });
+});
 
 module.exports = app;
