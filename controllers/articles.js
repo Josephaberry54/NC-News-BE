@@ -14,7 +14,6 @@ function getAllArticles(req, res, next) {
       });
     })
     .then(articles => {
-      console.log(articles);
       res.json({ articles });
     });
 }
