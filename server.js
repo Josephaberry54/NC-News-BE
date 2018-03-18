@@ -22,7 +22,7 @@ app.use(morgan("dev"));
 app.use("/api", apiRouter);
 
 app.use("/*", (req, res, next) =>
-  res.status(400).json({ message: "page not found" })
+  res.status(404).json({ message: "page not found" })
 );
 
 app.use((err, req, res, next) => {

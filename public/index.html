@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>API | endpoints</title>
+</head>
+
+<body>
+  <h1>Northoders News API Endpoints</h1>
+
+  <h2>GET /api/topics</h2>
+  <h3>Returns all the topics</h3>
+  <h2>GET /api/topics/:topic_id/articles</h2>
+  <h3>Returns all the articles for a certain topic</h3>
+  <h2>GET /api/articles</h2>
+  <h3>Returns all the articles</h3>
+  <h2>GET /api/articles/:article_id/comments</h2>
+  <h3>Returns all the comments for an individual article</h3>
+  <h2>POST /api/articles/:article_id/comments</h2>
+  <h3>Adds a new comment to an article. This route requires a JSON body with a key/value pair for comment, belongs_to and created_by, must be valid ids e.g: {"comment": "This is my new comment", "belongs_to": "<article_id>", created_by: "<user_id>"}</h3>
+  <h2>PUT /api/articles/:article_id</h2>
+  <h3>Increments or Decrements the votes of an article by one. This route requires a vote query of 'up' or 'down' e.g: http://arcane-peak-29702.herokuapp.com/api/articles/:article_id?vote=up</h3>
+  <h2>PUT /api/comments/:comment_id</h2>
+  <h3>Increments or Decrements the votes of a comment by one. This route requires a vote query of 'up' or 'down' e.g: http://arcane-peak-29702.herokuapp.com/api/comments/:comment_id?vote=down</h3>
+  <h2>DELETE /api/comments/:comment_id</h2>
+  <h3>Deletes a comment</h3>
+  <h2>GET /api/users/:user_id</h2>
+  <h3>Returns the profile data for the specified user.</h3>
+
+</body>
+
+</html>
