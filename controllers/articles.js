@@ -1,7 +1,22 @@
 const { Article, Comment, User } = require("../models/models");
+const Promise = require("bluebird");
 
 function getAllArticles(req, res, next) {
-  Article.find().then(articles => res.json({ articles }));
+  Article.find()
+    .then(articles => {
+      return Promise.map(articles, article => {
+        commentCount = Comment.count({ belongs_to: article._id }).exec();
+        return Promise.all([article, commentCount]).then(
+          ([article, commentCount]) => {
+            return { ...article._doc, comments: commentCount };
+          }
+        );
+      });
+    })
+    .then(articles => {
+      console.log(articles);
+      res.json({ articles });
+    });
 }
 
 function getCommentsByArticleId(req, res, next) {

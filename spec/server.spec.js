@@ -10,24 +10,36 @@ const saveTestData = require("../seed/test.seed");
 
 describe("/api", () => {
   let usefulData;
+
   beforeEach(() => {
     return saveTestData(DB[process.env.NODE_ENV]).then(data => {
       usefulData = data;
     });
   });
+
   after(() => {
     return mongoose.disconnect();
   });
+
   describe("/topics", () => {
     it("GET returns status 200 and an object containing an array of all the topics", () => {
       return request
         .get("/api/topics")
         .expect(200)
         .then(res => {
-          expect(res.body.topics[0]).to.be.an("object");
-          expect(res.body.topics[0].title).to.be.a("string");
+          const { topics } = res.body;
+          expect(topics)
+            .to.be.an("Array")
+            .to.have.length(3);
+          expect(topics[0])
+            .to.be.an("object")
+            .that.has.all.keys("__v", "_id", "title", "slug");
+          expect(topics[0].title)
+            .to.be.a("string")
+            .to.equal("Football");
         });
     });
+
     describe("/:topic_id/articles", () => {
       it("GET returns status 200 and an object containing an array of all the articles for a certain topic", () => {
         const topic_id = usefulData.topics[0]._id;
@@ -35,22 +47,46 @@ describe("/api", () => {
           .get(`/api/topics/${topic_id}/articles`)
           .expect(200)
           .then(res => {
-            expect(res.body.articles[0].belongs_to).to.equal(`${topic_id}`);
+            const { articles } = res.body;
+            expect(articles)
+              .to.be.an("Array")
+              .to.have.length(1);
+            expect(articles[0].belongs_to)
+              .to.be.a("string")
+              .to.equal(`${topic_id}`);
           });
       });
     });
   });
+
   describe("/articles", () => {
     it("GET returns status 200 and an object containing an array of all the articles", () => {
       return request
         .get("/api/articles")
         .expect(200)
         .then(res => {
-          expect(res.body.articles[0]).to.be.an("object");
-          expect(res.body.articles[0].title).to.be.a("string");
-          expect(res.body.articles.length).to.equal(2);
+          const { articles } = res.body;
+          expect(articles[0])
+            .to.be.an("object")
+            .that.has.all.keys([
+              "title",
+              "body",
+              "belongs_to",
+              "votes",
+              "created_by",
+              "_id",
+              "__v",
+              "comments"
+            ]);
+          expect(articles[0].title)
+            .to.be.a("string")
+            .to.equal("Cats are great");
+          expect(articles)
+            .to.be.an("array")
+            .to.have.length(2);
         });
     });
+
     describe("/:article_id/comments", () => {
       it("GET returns status 200 and an object of all the comments for the specified article", () => {
         const article_id = usefulData.articles[0]._id;
@@ -62,6 +98,7 @@ describe("/api", () => {
             expect(res.body.comments.length).to.equal(1);
           });
       });
+
       it("POST returns status 201 and the comment object that was posted", () => {
         const article_id = usefulData.articles[0]._id;
         return request
@@ -75,6 +112,7 @@ describe("/api", () => {
           });
       });
     });
+
     describe("/:article_id/?vote", () => {
       it("PUT returns status 200 and increments the votes on an article if query vote=up", () => {
         const article_id = usefulData.articles[0]._id;
@@ -85,6 +123,7 @@ describe("/api", () => {
             expect(res.body.article.votes).to.equal(1);
           });
       });
+
       it("PUT returns status 200 and decrements the votes on an article if query vote=down", () => {
         const article_id = usefulData.articles[0]._id;
         return request
@@ -96,6 +135,7 @@ describe("/api", () => {
       });
     });
   });
+
   describe("/comments/:comment_id", () => {
     it("PUT returns status 200 and increments the votes on a comment if query vote=up", () => {
       const comment_id = usefulData.comments[0]._id;
@@ -106,6 +146,7 @@ describe("/api", () => {
           expect(res.body.comment.votes).to.equal(1);
         });
     });
+
     it("PUT returns status 200 and decrements the votes on a comment if query vote=down", () => {
       const comment_id = usefulData.comments[0]._id;
       return request
@@ -115,6 +156,7 @@ describe("/api", () => {
           expect(res.body.comment.votes).to.equal(-1);
         });
     });
+
     it("DELETE returns status 200 and returns the comment that was deleted", () => {
       const comment_id = usefulData.comments[1]._id;
       return request
@@ -131,6 +173,7 @@ describe("/api", () => {
         });
     });
   });
+
   describe("/users/:user_id", () => {
     it("GET returns status 200 and an object of a specified users profile", () => {
       const user_id = usefulData.user._id;
