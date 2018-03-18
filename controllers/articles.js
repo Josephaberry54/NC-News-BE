@@ -48,8 +48,8 @@ function voteOnAnArticle(req, res, next) {
   let value;
   vote === "up" ? (value = 1) : vote === "down" ? (value = -1) : value;
 
-  return Article.findOneAndUpdate(
-    { _id: article_id },
+  return Article.findByIdAndUpdate(
+    article_id,
     { $inc: { votes: value } },
     { new: true }
   )
