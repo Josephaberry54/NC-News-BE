@@ -48,11 +48,12 @@ describe("/api", () => {
           .expect(200)
           .then(res => {
             const { articles } = res.body;
+            console.log(articles[0]);
             expect(articles)
               .to.be.an("Array")
               .to.have.length(1);
-            expect(articles[0].belongs_to)
-              .to.be.a("string")
+            expect(articles[0].belongs_to._id)
+              .to.be.an("string")
               .to.equal(`${topic_id}`);
             expect(articles[0])
               .to.be.an("object")
@@ -113,7 +114,8 @@ describe("/api", () => {
           .expect(200)
           .then(res => {
             const { comments } = res.body;
-            expect(comments[0].belongs_to)
+            console.log(comments[0]);
+            expect(comments[0].belongs_to._id)
               .to.be.a("string")
               .to.equal(`${article_id}`);
             expect(comments)

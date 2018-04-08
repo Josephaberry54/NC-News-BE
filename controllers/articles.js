@@ -24,6 +24,8 @@ function getAllArticles(req, res, next) {
 function getCommentsByArticleId(req, res, next) {
   const { article_id } = req.params;
   Comment.find({ belongs_to: article_id })
+    .populate("belongs_to")
+    .populate("created_by")
     .then(comments => res.json({ comments }))
     .catch(next);
 }

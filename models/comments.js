@@ -8,7 +8,7 @@ const CommentSchema = new Schema({
   },
   belongs_to: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "article",
+    ref: "articles",
     required: true
   },
   created_at: {
@@ -21,7 +21,7 @@ const CommentSchema = new Schema({
   },
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "user"
+    ref: "users"
   }
 });
 
