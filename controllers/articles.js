@@ -3,6 +3,8 @@ const Promise = require("bluebird");
 
 function getAllArticles(req, res, next) {
   Article.find()
+    .populate("belongs_to")
+    .populate("created_by", "username _id")
     .then(articles => {
       return Promise.map(articles, article => {
         commentCount = Comment.count({ belongs_to: article._id }).exec();
