@@ -61,7 +61,7 @@ function voteOnAnArticle(req, res, next) {
   )
     .populate("belongs_to")
     .populate("created_by")
-    .then(article => res.send({ article }))
+    .then(article => res.send(article))
     .catch(next);
 }
 
