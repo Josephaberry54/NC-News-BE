@@ -42,7 +42,9 @@ function postACommentByArticleId(req, res, next) {
       });
       return newComment.save();
     })
-    .then(commentDoc => res.status(201).json({ commentDoc }))
+    .then(commentDoc => {
+      res.status(201).json({ commentDoc });
+    })
     .catch(next);
 }
 
@@ -57,6 +59,8 @@ function voteOnAnArticle(req, res, next) {
     { $inc: { votes: value } },
     { new: true }
   )
+    .populate("belongs_to")
+    .populate("created_by")
     .then(article => res.send({ article }))
     .catch(next);
 }
