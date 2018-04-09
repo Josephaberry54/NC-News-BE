@@ -10,15 +10,16 @@ mongoose.Promise = Promise;
 const bodyParser = require("body-parser");
 const apiRouter = require("./routers/api");
 const morgan = require("morgan");
+const cors = require("cors");
 
 mongoose
   .connect(DB, { useMongoClient: true })
   .then(() => console.log("successfully connected to", DB))
   .catch(err => console.log("connection failed", err));
 
+app.use(cors());
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods: POST, GET, DELETE, PUT");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept"
