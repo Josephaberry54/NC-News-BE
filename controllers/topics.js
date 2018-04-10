@@ -10,7 +10,7 @@ function getAllTopics(req, res, next) {
 function getArticlesByTopic(req, res, next) {
   const { topic_id } = req.params;
   return Article.find({ belongs_to: topic_id })
-    .populate("belongs_to", "username _id")
+    .populate("belongs_to", "title _id")
     .populate("created_by")
     .then(articles => {
       return Promise.map(articles, article => {
