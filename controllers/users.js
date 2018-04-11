@@ -7,4 +7,12 @@ function getUserByUserId(req, res, next) {
     .catch(next);
 }
 
-module.exports = { getUserByUserId };
+// need to add testing
+
+function getAllUsers(req, res, next) {
+  User.find()
+    .then(users => res.json({ users }))
+    .catch(next);
+}
+
+module.exports = { getUserByUserId, getAllUsers };
