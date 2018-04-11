@@ -11,11 +11,7 @@ function voteOnAComment(req, res, next) {
     { $inc: { votes: value } },
     { new: true }
   )
-    .then(comment =>
-      res.json({
-        comment
-      })
-    )
+    .then(comment => res.json(comment))
     .catch(next);
 }
 
