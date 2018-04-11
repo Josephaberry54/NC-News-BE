@@ -24,7 +24,7 @@ function deleteCommentById(req, res, next) {
   return Comment.findOneAndRemove({ _id: comment_id }, { new: false })
     .then(deletedComment => {
       if (!deletedComment) return next({ message: "no such comment" });
-      res.json({ deletedComment });
+      res.json(deletedComment);
     })
     .catch(next);
 }
