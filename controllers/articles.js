@@ -1,23 +1,31 @@
 const { Article, Comment, User } = require("../models/models");
-const Promise = require("bluebird");
+// const Promise = require("bluebird");
 
 function getAllArticles(req, res, next) {
   Article.find()
     .populate("belongs_to")
     .populate("created_by", "username _id")
     .then(articles => {
-      return Promise.map(articles, article => {
-        commentCount = Comment.count({ belongs_to: article._id }).exec();
-        return Promise.all([article, commentCount]).then(
-          ([article, commentCount]) => {
-            return { ...article._doc, comments: commentCount };
-          }
-        );
+      const commentCounts = articles.map(article => {
+        return Comment.find({ belongs_to: article._id }).count();
+      });
+      return Promise.all([articles, ...commentCounts]);
+    })
+    .then(([articles, ...counts]) => {
+      return articles.map((article, i) => {
+        return {
+          title: article.title,
+          body: article.body,
+          belongs_to: article.belongs_to,
+          created_by: article.created_by,
+          votes: article.votes,
+          comments: counts[i],
+          _id: article._id,
+          __v: article.__v
+        };
       });
     })
-    .then(articles => {
-      res.json({ articles });
-    })
+    .then(articles => res.json({ articles }))
     .catch(next);
 }
 
