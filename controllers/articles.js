@@ -51,8 +51,15 @@ function postACommentByArticleId(req, res, next) {
 function voteOnAnArticle(req, res, next) {
   const { vote } = req.query;
   const { article_id } = req.params;
+
   let value;
-  vote === "up" ? (value = 1) : vote === "down" ? (value = -1) : value;
+  if (vote === "up") {
+    value = 1;
+  } else if (vote === "down") {
+    value = -1;
+  } else {
+    next();
+  }
 
   return Article.findByIdAndUpdate(
     article_id,

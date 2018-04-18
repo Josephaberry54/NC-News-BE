@@ -3,8 +3,15 @@ const { Comment } = require("../models/models");
 function voteOnAComment(req, res, next) {
   const { vote } = req.query;
   const { comment_id } = req.params;
+
   let value;
-  vote === "up" ? (value = 1) : vote === "down" ? (value = -1) : value;
+  if (vote === "up") {
+    value = 1;
+  } else if (vote === "down") {
+    value = -1;
+  } else {
+    next();
+  }
 
   return Comment.findOneAndUpdate(
     { _id: comment_id },
