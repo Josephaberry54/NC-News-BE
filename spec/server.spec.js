@@ -156,9 +156,9 @@ describe("/api", () => {
           .put(`/api/articles/${article_id}?vote=up`)
           .expect(200)
           .then(res => {
-            const { article } = res.body;
-            expect(article).to.be.an("object");
-            expect(article.votes)
+            const { body } = res;
+            expect(body).to.be.an("object");
+            expect(body.votes)
               .to.be.a("number")
               .equal(1);
           });
@@ -170,11 +170,11 @@ describe("/api", () => {
           .put(`/api/articles/${article_id}?vote=down`)
           .expect(200)
           .then(res => {
-            const { article } = res.body;
-            expect(article.votes)
+            const { body } = res;
+            expect(body.votes)
               .to.be.a("number")
               .equal(-1);
-            expect(article).to.be.an("object");
+            expect(body).to.be.an("object");
           });
       });
     });
@@ -187,9 +187,9 @@ describe("/api", () => {
         .put(`/api/comments/${comment_id}?vote=up`)
         .expect(200)
         .then(res => {
-          const { comment } = res.body;
-          expect(comment).to.be.an("object");
-          expect(comment.votes)
+          const { body } = res;
+          expect(body).to.be.an("object");
+          expect(body.votes)
             .to.be.a("number")
             .equal(1);
         });
@@ -201,9 +201,9 @@ describe("/api", () => {
         .put(`/api/comments/${comment_id}?vote=down`)
         .expect(200)
         .then(res => {
-          const { comment } = res.body;
-          expect(comment).to.be.an("object");
-          expect(comment.votes)
+          const { body } = res;
+          expect(body).to.be.an("object");
+          expect(body.votes)
             .to.be.a("number")
             .to.equal(-1);
         });
@@ -215,7 +215,7 @@ describe("/api", () => {
         .delete(`/api/comments/${comment_id}`)
         .expect(200)
         .then(res => {
-          const { _id, body } = res.body.deletedComment;
+          const { _id, body } = res.body;
           expect(body)
             .to.be.a("string")
             .to.equal("this is another comment");
