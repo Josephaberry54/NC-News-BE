@@ -29,7 +29,7 @@ git --version
 Clone my repository:
 
 ```
-git clone https://github.com/Josephaberry54/BE-FT-northcoders-news.git
+git clone https://github.com/Josephaberry54/NC-News-BE
 ```
 
 Navigate in to the cloned repository using the cd command and then install all the dependencies:
